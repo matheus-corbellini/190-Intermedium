@@ -1,13 +1,13 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { PATHS } from "./path";
-
-const Home = () => <div>Página inicial (esqueleto)</div>;
+import Login from "../pages/Login";
 
 const AppRoutes = () => {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path={PATHS.HOME} element={<Home />} />
+        <Route path={PATHS.HOME} element={<Login />} />
+        <Route path={PATHS.LOGIN} element={<Login />} />
       </Routes>
     </BrowserRouter>
   );
