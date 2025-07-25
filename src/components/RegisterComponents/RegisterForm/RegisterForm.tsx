@@ -13,6 +13,7 @@ import {
   FaEyeSlash,
 } from "react-icons/fa";
 import Select from "react-select";
+import type { GroupBase, StylesConfig } from "react-select";
 
 interface RegisterFooterProps {
   name: string;
@@ -32,7 +33,12 @@ interface RegisterFooterProps {
   error: string;
 }
 
-const roleOptions = [
+type OptionType = {
+  value: string;
+  label: React.ReactNode;
+};
+
+const roleOptions: OptionType[] = [
   {
     value: "zelador",
     label: (
@@ -62,7 +68,7 @@ const roleOptions = [
   },
 ];
 
-const getSetorOptions = (setores: string[]) =>
+const getSetorOptions = (setores: string[]): OptionType[] =>
   setores.map((setor) => ({
     value: setor,
     label: (
@@ -73,8 +79,8 @@ const getSetorOptions = (setores: string[]) =>
     ),
   }));
 
-const customStyles = {
-  control: (provided: any) => ({
+const customStyles: StylesConfig<OptionType, false, GroupBase<OptionType>> = {
+  control: (provided) => ({
     ...provided,
     borderRadius: 8,
     borderColor: "#e1e5e9",
@@ -83,7 +89,7 @@ const customStyles = {
     fontSize: 16,
     background: "#f8f9fa",
   }),
-  option: (provided: any, state: any) => ({
+  option: (provided, state) => ({
     ...provided,
     display: "flex",
     alignItems: "center",
@@ -91,7 +97,7 @@ const customStyles = {
     backgroundColor: state.isSelected ? "#667eea22" : "white",
     color: "#333",
   }),
-  singleValue: (provided: any) => ({
+  singleValue: (provided) => ({
     ...provided,
     display: "flex",
     alignItems: "center",
@@ -168,7 +174,7 @@ const RegisterForm: React.FC<RegisterFooterProps> = ({
               onChange({
                 target: {
                   name: "role",
-                  value: option ? (option as any).value : "",
+                  value: (option as OptionType)?.value || "",
                 },
               })
             }
@@ -193,7 +199,7 @@ const RegisterForm: React.FC<RegisterFooterProps> = ({
               onChange({
                 target: {
                   name: "setor",
-                  value: option ? (option as any).value : "",
+                  value: (option as OptionType)?.value || "",
                 },
               })
             }
