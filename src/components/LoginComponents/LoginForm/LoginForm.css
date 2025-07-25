@@ -1,9 +1,10 @@
 .login-form {
-  margin-bottom: 30px;
+  margin-bottom: 24px;
 }
 
+/* Se houver .form-group, aumente também: */
 .form-group {
-  margin-bottom: 20px;
+  margin-bottom: 16px;
 }
 
 .form-group label {
@@ -33,6 +34,41 @@
 
 .form-group input::placeholder {
   color: #adb5bd;
+}
+
+.input-with-icon-login {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  background: #f8f9fa;
+  border: 2px solid #e1e5e9;
+  border-radius: 6px;
+  transition: border-color 0.3s;
+  padding: 5px;
+  margin-bottom: 15px;
+  min-height: 32px;
+}
+
+.input-with-icon-login:focus-within {
+  border-color: #667eea;
+  background: #fff;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.input-with-icon-login input {
+  border: none;
+  outline: none;
+  background: transparent;
+  width: 100%;
+  padding: 7px 28px 7px 28px !important;
+  font-size: 14px;
+  border-radius: 6px;
+  box-sizing: border-box;
+}
+
+.login-button {
+  margin-top: 15px;
 }
 
 /* Responsividade */

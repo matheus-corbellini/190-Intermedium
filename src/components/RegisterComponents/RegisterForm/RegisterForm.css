@@ -56,7 +56,7 @@
   cursor: pointer;
 }
 
-.input-with-icon {
+.input-with-icon-register {
   position: relative;
   display: flex;
   align-items: center;
@@ -69,13 +69,13 @@
   min-height: 32px;
 }
 
-.input-with-icon:focus-within {
+.input-with-icon-register:focus-within {
   border-color: #667eea;
   background: #fff;
   box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
 }
 
-.input-with-icon input {
+.input-with-icon-register input {
   border: none;
   outline: none;
   background: transparent;

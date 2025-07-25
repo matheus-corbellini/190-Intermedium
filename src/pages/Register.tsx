@@ -93,7 +93,7 @@ const Register: React.FC = () => {
     <div className="register-container">
       <RegisterCard>
         <Header
-          title="Criar conta"
+          title="Criar Conta"
           subtitle="Sistema de Limpeza - Aeroporto Internacional"
         />
         <RegisterForm

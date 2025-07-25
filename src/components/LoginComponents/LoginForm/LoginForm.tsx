@@ -1,12 +1,16 @@
 import "./LoginForm.css";
-import React from "react";
+import React, { useState } from "react";
+import Button from "../../Button/Button";
+import { FaEnvelope, FaLock, FaEye, FaEyeSlash } from "react-icons/fa";
 
 interface LoginFormProps {
   email: string;
   password: string;
-  onEmailChange: (email: string) => void;
-  onPasswordChange: (password: string) => void;
+  onEmailChange: (value: string) => void;
+  onPasswordChange: (value: string) => void;
   onSubmit: (e: React.FormEvent) => void;
+  loading?: boolean;
+  error?: string;
 }
 
 const LoginForm: React.FC<LoginFormProps> = ({
@@ -15,32 +19,56 @@ const LoginForm: React.FC<LoginFormProps> = ({
   onEmailChange,
   onPasswordChange,
   onSubmit,
+  loading = false,
+  error = "",
 }) => {
+  const [showPassword, setShowPassword] = useState(false);
+
   return (
-    <form className="login-form" onSubmit={onSubmit}>
-      <div className="form-group">
-        <label htmlFor="email">Email</label>
+    <form onSubmit={onSubmit}>
+      <div className="input-with-icon-login">
+        <span className="input-icon">
+          <FaEnvelope />
+        </span>
         <input
           type="email"
-          id="email"
           value={email}
           onChange={(e) => onEmailChange(e.target.value)}
-          placeholder="seu.email@exemplo.com"
+          placeholder="Email"
           required
         />
       </div>
-      <div className="form-group">
-        <label htmlFor="password">Senha</label>
+      <div className="input-with-icon-login">
+        <span className="input-icon">
+          <FaLock />
+        </span>
         <input
-          type="password"
-          id="password"
+          type={showPassword ? "text" : "password"}
           value={password}
           onChange={(e) => onPasswordChange(e.target.value)}
-          placeholder="Digite sua senha"
+          placeholder="Senha"
           required
         />
+        <button
+          type="button"
+          className="eye-button"
+          onClick={() => setShowPassword((v) => !v)}
+          tabIndex={-1}
+        >
+          {showPassword ? <FaEye /> : <FaEyeSlash />}
+        </button>
       </div>
+      {error && <div className="error-message">{error}</div>}
+      <Button
+        className="login-button"
+        loading={loading}
+        disabled={loading}
+        type="submit"
+      >
+        {loading ? "Entrando..." : "Entrar"}
+      </Button>
     </form>
   );
 };
+
 export default LoginForm;

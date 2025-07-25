@@ -125,7 +125,7 @@ const RegisterForm: React.FC<RegisterFooterProps> = ({
       <div className="form-row">
         <div className="form-group">
           <label htmlFor="name">Nome Completo</label>
-          <div className="input-with-icon">
+          <div className="input-with-icon-register">
             <span className="input-icon">
               <FaUser />
             </span>
@@ -145,7 +145,7 @@ const RegisterForm: React.FC<RegisterFooterProps> = ({
       <div className="form-row">
         <div className="form-group">
           <label htmlFor="email">Email</label>
-          <div className="input-with-icon">
+          <div className="input-with-icon-register">
             <span className="input-icon">
               <FaEnvelope />
             </span>
@@ -213,7 +213,7 @@ const RegisterForm: React.FC<RegisterFooterProps> = ({
       <div className="form-row">
         <div className="form-group">
           <label htmlFor="password">Senha</label>
-          <div className="input-with-icon">
+          <div className="input-with-icon-register">
             <span className="input-icon">
               <FaLock />
             </span>
@@ -238,7 +238,7 @@ const RegisterForm: React.FC<RegisterFooterProps> = ({
         </div>
         <div className="form-group half">
           <label htmlFor="confirmPassword">Confirmar Senha</label>
-          <div className="input-with-icon">
+          <div className="input-with-icon-register">
             <span className="input-icon">
               <FaLock />
             </span>
