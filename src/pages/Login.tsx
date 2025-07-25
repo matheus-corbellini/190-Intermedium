@@ -1,20 +1,21 @@
-import React from "react";
-import { useState } from "react";
+import React, { useState } from "react";
 import { useAuth } from "../hooks/UseAuth";
 import { useNavigation } from "../hooks/useNavigation";
 import { UserRole } from "../types/User";
 
 import LoginCard from "../components/LoginComponents/LoginCard/LoginCard";
-import LoginHeader from "../components/LoginComponents/LoginHeader/LoginHeader";
+import Header from "../components/Header/Header";
 import LoginForm from "../components/LoginComponents/LoginForm/LoginForm";
 import ErrorMessage from "../components/LoginComponents/ErrorMessage/ErrorMessage";
 import LoginFooter from "../components/LoginComponents/LoginFooter/LoginFooter";
 import DemoAccounts from "../components/LoginComponents/DemoAccounts/DemoAccounts";
 import Button from "../components/Button/Button";
+import { FaEnvelope, FaLock, FaEye, FaEyeSlash } from "react-icons/fa";
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -56,18 +57,43 @@ const Login: React.FC = () => {
 
   return (
     <LoginCard>
-      <LoginHeader
+      <Header
         title="Sistema de limpeza e manutenção"
         subtitle="Aeroporto Internacional"
       />
       <form onSubmit={handleSubmit}>
-        <LoginForm
-          email={email}
-          password={password}
-          onEmailChange={setEmail}
-          onPasswordChange={setPassword}
-          onSubmit={handleSubmit}
-        />
+        <div className="input-with-icon">
+          <span className="input-icon">
+            <FaEnvelope />
+          </span>
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="Email"
+            required
+          />
+        </div>
+        <div className="input-with-icon">
+          <span className="input-icon">
+            <FaLock />
+          </span>
+          <input
+            type={showPassword ? "text" : "password"}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="Senha"
+            required
+          />
+          <button
+            type="button"
+            className="eye-button"
+            onClick={() => setShowPassword((v) => !v)}
+            tabIndex={-1}
+          >
+            {showPassword ? <FaEye /> : <FaEyeSlash />}
+          </button>
+        </div>
         <ErrorMessage message={error} show={!!error} />
         <Button loading={loading} disabled={loading} type="submit">
           {loading ? "Entrando..." : "Entrar"}

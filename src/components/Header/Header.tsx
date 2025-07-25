@@ -1,4 +1,4 @@
-import "./LoginHeader.css";
+import "./Header.css";
 import React from "react";
 
 interface LoginHeaderProps {

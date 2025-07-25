@@ -21,3 +21,23 @@
   cursor: not-allowed;
   transform: none;
 }
+
+.link-button {
+  background: none;
+  border: none;
+  color: #667eea;
+  cursor: pointer;
+  font-weight: 600;
+  text-decoration: underline;
+  font-size: 14px;
+  padding: 0;
+  box-shadow: none;
+  transition: color 0.2s;
+}
+
+.link-button:hover {
+  color: #764ba2;
+  background: none;
+  box-shadow: none;
+  text-decoration: underline;
+}

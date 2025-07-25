@@ -8,6 +8,7 @@ interface ButtonProps {
   children: React.ReactNode;
   onClick?: () => void;
   className?: string;
+  variant?: "default" | "link";
 }
 
 const Button: React.FC<ButtonProps> = ({
@@ -17,9 +18,12 @@ const Button: React.FC<ButtonProps> = ({
   children,
   onClick,
   className = "",
+  variant = "default",
 }) => (
   <button
-    className={`button ${className}`}
+    className={
+      variant === "link" ? `link-button ${className}` : `button ${className}`
+    }
     type={type}
     disabled={disabled || loading}
     onClick={onClick}
