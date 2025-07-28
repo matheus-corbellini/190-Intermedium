@@ -1,0 +1,135 @@
+.task-execution {
+  min-height: 100vh;
+  background: #f8f9fa;
+  padding: 20px;
+}
+
+.execution-header {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.execution-info h1 {
+  color: #333;
+  font-size: 24px;
+  margin-bottom: 8px;
+}
+
+.execution-info p {
+  color: #666;
+  font-size: 16px;
+}
+
+.back-button {
+  background: #6b7280;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: background 0.2s;
+}
+
+.back-button:hover {
+  background: #4b5563;
+}
+
+.checklist-container {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.checklist-header {
+  padding: 20px;
+  border-bottom: 1px solid #e5e7eb;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.checklist-header h2 {
+  color: #333;
+  font-size: 20px;
+}
+
+.progress-info {
+  color: #666;
+  font-size: 14px;
+}
+
+.checklist-items {
+  max-height: 500px;
+  overflow-y: auto;
+}
+
+.finish-section {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  margin-top: 20px;
+}
+
+.finish-section h3 {
+  color: #333;
+  margin-bottom: 15px;
+}
+
+.password-input {
+  width: 100%;
+  padding: 12px;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 16px;
+  margin-bottom: 15px;
+}
+
+.password-input:focus {
+  outline: none;
+  border-color: #667eea;
+}
+
+.finish-button {
+  background: #10b981;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+  width: 100%;
+}
+
+.finish-button:hover:not(:disabled) {
+  background: #059669;
+}
+
+.finish-button:disabled {
+  background: #9ca3af;
+  cursor: not-allowed;
+}
+
+@media (max-width: 768px) {
+  .task-execution {
+    padding: 10px;
+  }
+
+  .execution-header {
+    flex-direction: column;
+    gap: 15px;
+    text-align: center;
+  }
+}

@@ -6,10 +6,8 @@ import { UserRole } from "../types/User";
 import LoginCard from "../components/LoginComponents/LoginCard/LoginCard";
 import Header from "../components/Header/Header";
 import LoginForm from "../components/LoginComponents/LoginForm/LoginForm";
-import ErrorMessage from "../components/LoginComponents/ErrorMessage/ErrorMessage";
 import LoginFooter from "../components/LoginComponents/LoginFooter/LoginFooter";
 import DemoAccounts from "../components/LoginComponents/DemoAccounts/DemoAccounts";
-import Button from "../components/Button/Button";
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState("");
@@ -42,7 +40,7 @@ const Login: React.FC = () => {
         };
 
         login(mockUser);
-        goTo("/");
+        goTo("/dashboard");
       } else {
         setError("Por favor, preencha todos os campos");
       }
