@@ -1,7 +1,19 @@
 .zelador-dashboard {
   min-height: 100vh;
   background: #f8f9fa;
+  display: flex;
+}
+
+.dashboard-content {
+  flex: 1;
   padding: 20px;
+  margin-left: 0;
+  transition: margin-left 0.3s ease;
+}
+
+.dashboard-main {
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 .dashboard-header {
@@ -92,36 +104,47 @@
   overflow-y: auto;
 }
 
-.logout-button {
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  background: #ef4444;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: 600;
-  transition: background 0.2s;
+.section-content {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 30px;
+  text-align: center;
 }
 
-.logout-button:hover {
-  background: #dc2626;
+.section-content h2 {
+  color: #333;
+  margin-bottom: 15px;
+}
+
+.section-content p {
+  color: #666;
+  font-size: 16px;
+}
+
+.coming-soon {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 600;
+  display: inline-block;
+  margin-top: 10px;
+}
+
+@media (min-width: 1024px) {
+  .dashboard-content {
+    margin-left: 280px;
+  }
 }
 
 @media (max-width: 768px) {
-  .zelador-dashboard {
+  .dashboard-content {
     padding: 10px;
   }
 
   .dashboard-stats {
     grid-template-columns: repeat(2, 1fr);
-  }
-
-  .logout-button {
-    position: static;
-    width: 100%;
-    margin-bottom: 20px;
   }
 }
