@@ -7,7 +7,6 @@ import LoginCard from "../components/LoginComponents/LoginCard/LoginCard";
 import Header from "../components/Header/Header";
 import LoginForm from "../components/LoginComponents/LoginForm/LoginForm";
 import LoginFooter from "../components/LoginComponents/LoginFooter/LoginFooter";
-import DemoAccounts from "../components/LoginComponents/DemoAccounts/DemoAccounts";
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState("");
@@ -24,28 +23,22 @@ const Login: React.FC = () => {
     setError("");
 
     try {
-      if (email && password) {
-        const mockUser = {
-          id: "1",
-          name: email.split("@")[0],
-          email,
-          role: email.includes("admin")
-            ? UserRole.ADMIN
-            : email.includes("gerente")
-            ? UserRole.GERENTE
-            : UserRole.ZELADOR,
-          setor: "Terminal 1",
-          createdAt: new Date(),
-          updatedAt: new Date(),
-        };
+      const user = await login(email, password);
 
-        login(mockUser);
+      // Redireciona para o dashboard correto conforme o perfil
+      if (user.role === UserRole.ZELADOR) {
         goTo("/dashboard");
+      } else if (user.role === UserRole.ADMIN) {
+        // Futuro: goTo("/admin-dashboard");
+        setError("Área de admin em desenvolvimento. Fale com o suporte.");
+      } else if (user.role === UserRole.GERENTE) {
+        // Futuro: goTo("/gerente-dashboard");
+        setError("Área de gerente em desenvolvimento. Fale com o suporte.");
       } else {
-        setError("Por favor, preencha todos os campos");
+        setError("Perfil não reconhecido. Fale com o suporte.");
       }
     } catch (error) {
-      setError("Erro ao fazer login" + error);
+      setError("Erro ao fazer login: " + error);
     } finally {
       setLoading(false);
     }
@@ -67,7 +60,6 @@ const Login: React.FC = () => {
         error={error}
       />
       <LoginFooter onRegisterClick={() => goTo("/register")} />
-      <DemoAccounts />
     </LoginCard>
   );
 };

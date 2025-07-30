@@ -27,18 +27,20 @@ const Register: React.FC = () => {
     email: "",
     password: "",
     confirmPassword: "",
-    role: UserRole.ZELADOR,
+    role: "", // começa vazio, usuário escolhe
     setor: "",
   });
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const { login } = useAuth();
+  const { register } = useAuth();
   const { goTo } = useNavigation();
 
   const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+    e:
+      | React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+      | { target: { name: string; value: string } }
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -64,19 +66,30 @@ const Register: React.FC = () => {
       return;
     }
 
+    if (!formData.role) {
+      setError("Selecione o perfil");
+      setLoading(false);
+      return;
+    }
+
     try {
-      const newUser = {
-        id: Date.now().toString(),
+      // Converte o valor do select para o enum correto
+      const userData = {
         name: formData.name,
         email: formData.email,
-        role: formData.role,
+        role: formData.role as UserRole, // garante que é do tipo enum
         setor: formData.setor,
-        createdAt: new Date(),
-        updatedAt: new Date(),
       };
 
-      login(newUser);
-      goTo("/");
+      await register(formData.email, formData.password, userData);
+
+      // Redireciona só se for zelador
+      if (userData.role === UserRole.ZELADOR) {
+        goTo("/dashboard");
+      } else {
+        // Futuro: redirecionar para outras áreas
+        goTo("/");
+      }
     } catch (error) {
       setError("Erro ao criar usuário. Tente novamente.");
       console.error("Erro ao criar usuário:", error);
@@ -108,7 +121,6 @@ const Register: React.FC = () => {
           onSubmit={handleSubmit}
           loading={loading}
           error={error}
-          onGoToLogin={handleGoToLogin}
         />
         <RegisterFooter onLoginClick={handleGoToLogin} />
       </RegisterCard>

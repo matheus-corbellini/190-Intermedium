@@ -14,6 +14,7 @@ import {
 } from "react-icons/fa";
 import Select from "react-select";
 import type { GroupBase, StylesConfig } from "react-select";
+import { UserRole } from "../../../types/User";
 
 interface RegisterFooterProps {
   name: string;
@@ -40,7 +41,7 @@ type OptionType = {
 
 const roleOptions: OptionType[] = [
   {
-    value: "zelador",
+    value: UserRole.ZELADOR,
     label: (
       <span>
         <FaBroom style={{ marginRight: 8 }} />
@@ -49,7 +50,7 @@ const roleOptions: OptionType[] = [
     ),
   },
   {
-    value: "gerente",
+    value: UserRole.GERENTE,
     label: (
       <span>
         <FaUserTie style={{ marginRight: 8 }} />
@@ -58,7 +59,7 @@ const roleOptions: OptionType[] = [
     ),
   },
   {
-    value: "admin",
+    value: UserRole.ADMIN,
     label: (
       <span>
         <FaUserShield style={{ marginRight: 8 }} />
