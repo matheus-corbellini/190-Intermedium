@@ -4,7 +4,7 @@ import Login from "../pages/Login";
 import Register from "../pages/Register";
 import ZeladorDashboard from "../pages/ZeladorDashboard/ZeladorDashboard";
 import ProtectedRoute from "./ProtectedRoute";
-import GerenteDashboard from "../pages/GerenteDashboard/Gerentedasboard";
+import GerenteDashboard from "../pages/GerenteDashboard/GerenteDashboard";
 
 const AppRoutes = () => {
   return (
