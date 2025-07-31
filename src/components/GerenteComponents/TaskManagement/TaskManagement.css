@@ -1,0 +1,385 @@
+.task-management {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.task-management-header {
+  padding: 20px;
+  border-bottom: 1px solid #e5e7eb;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.task-management-header h2 {
+  color: #333;
+  font-size: 20px;
+}
+
+.add-task-button {
+  background: #10b981;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.add-task-button:hover {
+  background: #059669;
+}
+
+.task-templates-list {
+  padding: 20px;
+}
+
+.task-template-card {
+  background: #f8f9fa;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 15px;
+  transition: box-shadow 0.2s;
+}
+
+.task-template-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.task-template-card:last-child {
+  margin-bottom: 0;
+}
+
+.task-template-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 15px;
+}
+
+.task-template-info h3 {
+  color: #333;
+  font-size: 18px;
+  margin-bottom: 5px;
+}
+
+.task-template-info p {
+  color: #666;
+  margin-bottom: 8px;
+}
+
+.task-template-meta {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.template-duration {
+  background: #e0e7ff;
+  color: #3730a3;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.template-priority {
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.template-priority.high {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.template-priority.medium {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.template-priority.low {
+  background: #f0f9ff;
+  color: #0369a1;
+}
+
+.template-questions-count {
+  color: #666;
+  font-size: 14px;
+}
+
+.task-template-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.template-action-button {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.edit-template-button {
+  background: #3b82f6;
+  color: white;
+}
+
+.edit-template-button:hover {
+  background: #2563eb;
+}
+
+.delete-template-button {
+  background: #ef4444;
+  color: white;
+}
+
+.delete-template-button:hover {
+  background: #dc2626;
+}
+
+.task-form-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.task-form {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+  width: 100%;
+  max-width: 600px;
+  max-height: 90vh;
+  overflow-y: auto;
+  padding: 20px;
+}
+
+.task-form h3 {
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+  margin-bottom: 15px;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group.full-width {
+  grid-column: 1 / -1;
+}
+
+.form-group label {
+  display: block;
+  color: #333;
+  font-weight: 600;
+  margin-bottom: 5px;
+  font-size: 14px;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border: 2px solid #e5e7eb;
+  border-radius: 6px;
+  font-size: 14px;
+  background: #f8f9fa;
+  box-sizing: border-box;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: #10b981;
+  background: white;
+}
+
+.form-group textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.questions-section {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.questions-section h4 {
+  color: #333;
+  margin-bottom: 15px;
+}
+
+.question-item {
+  background: #f8f9fa;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  padding: 15px;
+  margin-bottom: 10px;
+}
+
+.question-header {
+  display: flex;
+  justify-content: between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.question-text {
+  flex: 1;
+  font-weight: 600;
+  color: #333;
+}
+
+.remove-question-button {
+  background: #ef4444;
+  color: white;
+  border: none;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.question-form {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+
+.question-form input {
+  padding: 8px 10px;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  font-size: 13px;
+}
+
+.question-options {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+
+.checkbox-group {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.checkbox-group input[type="checkbox"] {
+  width: auto;
+  margin: 0;
+}
+
+.add-question-button {
+  background: #3b82f6;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+  margin-top: 10px;
+}
+
+.add-question-button:hover {
+  background: #2563eb;
+}
+
+.form-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.form-button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.save-button {
+  background: #10b981;
+  color: white;
+}
+
+.save-button:hover {
+  background: #059669;
+}
+
+.cancel-button {
+  background: #6b7280;
+  color: white;
+}
+
+.cancel-button:hover {
+  background: #4b5563;
+}
+
+@media (max-width: 768px) {
+  .task-management-header {
+    flex-direction: column;
+    gap: 15px;
+    text-align: center;
+  }
+
+  .task-template-header {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .task-template-actions {
+    justify-content: center;
+  }
+
+  .task-form {
+    margin: 10px;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+
+  .question-options {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+}

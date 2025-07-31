@@ -4,6 +4,7 @@ import Login from "../pages/Login";
 import Register from "../pages/Register";
 import ZeladorDashboard from "../pages/ZeladorDashboard/ZeladorDashboard";
 import ProtectedRoute from "./ProtectedRoute";
+import GerenteDashboard from "../pages/GerenteDashboard/Gerentedasboard";
 
 const AppRoutes = () => {
   return (
@@ -17,6 +18,14 @@ const AppRoutes = () => {
           element={
             <ProtectedRoute>
               <ZeladorDashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path={PATHS.DASHBOARD_GERENTE}
+          element={
+            <ProtectedRoute>
+              <GerenteDashboard />
             </ProtectedRoute>
           }
         />

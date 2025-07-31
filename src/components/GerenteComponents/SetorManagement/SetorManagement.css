@@ -1,0 +1,233 @@
+.setor-management {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.setor-management-header {
+  padding: 20px;
+  border-bottom: 1px solid #e5e7eb;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.setor-management-header h2 {
+  color: #333;
+  font-size: 20px;
+}
+
+.add-setor-button {
+  background: #10b981;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.add-setor-button:hover {
+  background: #059669;
+}
+
+.setores-list {
+  padding: 20px;
+}
+
+.setor-card {
+  background: #f8f9fa;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 15px;
+  transition: box-shadow 0.2s;
+}
+
+.setor-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.setor-card:last-child {
+  margin-bottom: 0;
+}
+
+.setor-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 10px;
+}
+
+.setor-card h3 {
+  color: #333;
+  font-size: 18px;
+  margin-bottom: 5px;
+}
+
+.setor-card p {
+  color: #666;
+  margin-bottom: 8px;
+}
+
+.setor-location {
+  color: #10b981;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.setor-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.setor-action-button {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.edit-button {
+  background: #3b82f6;
+  color: white;
+}
+
+.edit-button:hover {
+  background: #2563eb;
+}
+
+.delete-button {
+  background: #ef4444;
+  color: white;
+}
+
+.delete-button:hover {
+  background: #dc2626;
+}
+
+.setor-form-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.setor-form {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+  width: 100%;
+  max-width: 500px;
+  padding: 20px;
+}
+
+.setor-form h3 {
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  display: block;
+  color: #333;
+  font-weight: 600;
+  margin-bottom: 5px;
+  font-size: 14px;
+}
+
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border: 2px solid #e5e7eb;
+  border-radius: 6px;
+  font-size: 14px;
+  background: #f8f9fa;
+  box-sizing: border-box;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: #10b981;
+  background: white;
+}
+
+.form-group textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.form-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+.form-button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.save-button {
+  background: #10b981;
+  color: white;
+}
+
+.save-button:hover {
+  background: #059669;
+}
+
+.cancel-button {
+  background: #6b7280;
+  color: white;
+}
+
+.cancel-button:hover {
+  background: #4b5563;
+}
+
+@media (max-width: 768px) {
+  .setor-management-header {
+    flex-direction: column;
+    gap: 15px;
+    text-align: center;
+  }
+
+  .setor-card-header {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .setor-actions {
+    justify-content: center;
+  }
+
+  .setor-form {
+    margin: 10px;
+  }
+}

@@ -32,8 +32,7 @@ const Login: React.FC = () => {
         // Futuro: goTo("/admin-dashboard");
         setError("Área de admin em desenvolvimento. Fale com o suporte.");
       } else if (user.role === UserRole.GERENTE) {
-        // Futuro: goTo("/gerente-dashboard");
-        setError("Área de gerente em desenvolvimento. Fale com o suporte.");
+        goTo("/gerente-dashboard");
       } else {
         setError("Perfil não reconhecido. Fale com o suporte.");
       }

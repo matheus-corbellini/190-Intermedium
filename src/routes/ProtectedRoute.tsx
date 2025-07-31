@@ -20,7 +20,12 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
       window.location.pathname === "/dashboard" &&
       user.role !== UserRole.ZELADOR
     ) {
-      goTo("/"); // Ou redirecione para a home ou dashboard do perfil correto futuramente
+      goTo("/");
+    } else if (
+      window.location.pathname === "/gerente-dashboard" &&
+      user.role !== UserRole.GERENTE
+    ) {
+      goTo("/");
     }
   }, [user, goTo]);
 

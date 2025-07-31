@@ -86,6 +86,8 @@ const Register: React.FC = () => {
       // Redireciona só se for zelador
       if (userData.role === UserRole.ZELADOR) {
         goTo("/dashboard");
+      } else if (userData.role === UserRole.GERENTE) {
+        goTo("/gerente-dashboard");
       } else {
         // Futuro: redirecionar para outras áreas
         goTo("/");

@@ -1,0 +1,183 @@
+.gerente-task-card {
+  padding: 20px;
+  border-bottom: 1px solid #e5e7eb;
+  transition: background-color 0.2s;
+  cursor: pointer;
+}
+
+.gerente-task-card:hover {
+  background-color: #f9fafb;
+}
+
+.gerente-task-card:last-child {
+  border-bottom: none;
+}
+
+.gerente-task-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 12px;
+}
+
+.gerente-task-info h3 {
+  color: #333;
+  font-size: 18px;
+  margin-bottom: 4px;
+}
+
+.gerente-task-info p {
+  color: #666;
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+
+.gerente-task-meta {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.gerente-task-setor {
+  background: #f3f4f6;
+  color: #374151;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.gerente-task-assignee {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: #666;
+  font-size: 14px;
+}
+
+.gerente-task-time {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: #666;
+  font-size: 14px;
+}
+
+.gerente-task-status {
+  text-align: right;
+}
+
+.gerente-status-badge {
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  display: inline-block;
+}
+
+.gerente-status-pending {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.gerente-status-in-progress {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+.gerente-status-completed {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.gerente-status-overdue {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.gerente-priority-badge {
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 10px;
+  font-weight: 600;
+  margin-left: 8px;
+}
+
+.gerente-priority-high {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.gerente-priority-medium {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.gerente-priority-low {
+  background: #f0f9ff;
+  color: #0369a1;
+}
+
+.gerente-task-progress {
+  margin-top: 10px;
+}
+
+.gerente-progress-text {
+  font-size: 12px;
+  color: #666;
+  margin-bottom: 5px;
+}
+
+.gerente-progress-bar {
+  width: 100%;
+  height: 4px;
+  background: #e5e7eb;
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.gerente-progress-fill {
+  height: 100%;
+  background: #10b981;
+  transition: width 0.3s ease;
+}
+
+.gerente-task-evidence {
+  margin-top: 10px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.gerente-evidence-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  color: #666;
+}
+
+.gerente-evidence-photos {
+  color: #10b981;
+}
+
+.gerente-evidence-issues {
+  color: #ef4444;
+}
+
+@media (max-width: 768px) {
+  .gerente-task-header {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .gerente-task-status {
+    text-align: left;
+  }
+
+  .gerente-task-meta {
+    gap: 10px;
+  }
+}
