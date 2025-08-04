@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useAuth } from "../hooks/UseAuth";
 import { useNavigation } from "../hooks/useNavigation";
 import { UserRole } from "../types/User";
+import { Footer } from "borderless";
 
 import LoginCard from "../components/LoginComponents/LoginCard/LoginCard";
 import Header from "../components/Header/Header";
@@ -44,22 +45,27 @@ const Login: React.FC = () => {
   };
 
   return (
-    <LoginCard>
-      <Header
-        title="Sistema de limpeza e manutenção"
-        subtitle="Aeroporto Internacional"
-      />
-      <LoginForm
-        email={email}
-        password={password}
-        onEmailChange={setEmail}
-        onPasswordChange={setPassword}
-        onSubmit={handleSubmit}
-        loading={loading}
-        error={error}
-      />
-      <LoginFooter onRegisterClick={() => goTo("/register")} />
-    </LoginCard>
+    <div style={{ position: "relative", minHeight: "100vh" }}>
+      <LoginCard>
+        <Header
+          title="Sistema de limpeza e manutenção"
+          subtitle="Aeroporto Internacional"
+        />
+        <LoginForm
+          email={email}
+          password={password}
+          onEmailChange={setEmail}
+          onPasswordChange={setPassword}
+          onSubmit={handleSubmit}
+          loading={loading}
+          error={error}
+        />
+        <LoginFooter onRegisterClick={() => goTo("/register")} />
+      </LoginCard>
+      <div style={{ position: "absolute", bottom: 0, left: 0, right: 0 }}>
+        <Footer theme="light" backgroundColor="transparent" useGradient={false} />
+      </div>
+    </div>
   );
 };
 

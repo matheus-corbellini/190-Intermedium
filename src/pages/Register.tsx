@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useAuth } from "../hooks/UseAuth";
 import { useNavigation } from "../hooks/useNavigation";
 import { UserRole } from "../types/User";
+import { Footer } from "borderless";
 
 import RegisterCard from "../components/RegisterComponents/RegisterCard/RegisterCard";
 import Header from "../components/Header/Header";
@@ -105,27 +106,36 @@ const Register: React.FC = () => {
   };
 
   return (
-    <div className="register-container">
-      <RegisterCard>
-        <Header
-          title="Criar Conta"
-          subtitle="Sistema de Limpeza - Aeroporto Internacional"
+    <div style={{ position: "relative", minHeight: "100vh" }}>
+      <div className="register-container">
+        <RegisterCard>
+          <Header
+            title="Criar Conta"
+            subtitle="Sistema de Limpeza - Aeroporto Internacional"
+          />
+          <RegisterForm
+            name={formData.name}
+            email={formData.email}
+            password={formData.password}
+            confirmPassword={formData.confirmPassword}
+            role={formData.role}
+            setor={formData.setor}
+            setores={setores}
+            onChange={handleInputChange}
+            onSubmit={handleSubmit}
+            loading={loading}
+            error={error}
+          />
+          <RegisterFooter onLoginClick={handleGoToLogin} />
+        </RegisterCard>
+      </div>
+      <div style={{ position: "absolute", bottom: 0, left: 0, right: 0 }}>
+        <Footer
+          theme="light"
+          backgroundColor="transparent"
+          useGradient={false}
         />
-        <RegisterForm
-          name={formData.name}
-          email={formData.email}
-          password={formData.password}
-          confirmPassword={formData.confirmPassword}
-          role={formData.role}
-          setor={formData.setor}
-          setores={setores}
-          onChange={handleInputChange}
-          onSubmit={handleSubmit}
-          loading={loading}
-          error={error}
-        />
-        <RegisterFooter onLoginClick={handleGoToLogin} />
-      </RegisterCard>
+      </div>
     </div>
   );
 };
