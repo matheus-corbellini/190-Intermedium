@@ -13,6 +13,7 @@ import GerenteTaskCard from "../../components/GerenteComponents/GerenteTaskCard/
 import TaskDetailsModal from "../../components/GerenteComponents/TaskDetailsModal/TaskDetailsModal";
 import SetorManagement from "../../components/GerenteComponents/SetorManagement/SetorManagement";
 import TaskManagement from "../../components/GerenteComponents/TaskManagement/TaskManagement";
+import ReportsSection from "../../components/GerenteComponents/ReportsSection/ReportsSection";
 import "./GerenteDashboard.css";
 
 const GerenteDashboard: React.FC = () => {
@@ -244,13 +245,7 @@ const GerenteDashboard: React.FC = () => {
       case "tasks":
         return <TaskManagement />;
       case "reports":
-        return (
-          <div className="section-content">
-            <h2>Relatórios</h2>
-            <p>Relatórios detalhados de desempenho e produtividade</p>
-            <span className="coming-soon">Em breve</span>
-          </div>
-        );
+        return <ReportsSection />;
       default:
         return renderDashboardContent();
     }

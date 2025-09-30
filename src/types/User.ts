@@ -1,3 +1,5 @@
+import { Timestamp } from "firebase/firestore";
+
 export enum UserRole {
   ADMIN = "ADMIN",
   GERENTE = "GERENTE",
@@ -9,7 +11,7 @@ export type User = {
   name: string;
   email: string;
   role: UserRole;
-  setor: string;
-  createdAt: Date;
-  updatedAt: Date;
+  setor?: string;
+  createdAt: Timestamp;
+  updatedAt: Timestamp;
 };

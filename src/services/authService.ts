@@ -5,7 +5,7 @@ import {
   onAuthStateChanged,
   type User as FirebaseUser,
 } from "firebase/auth";
-import { doc, getDoc, setDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc, Timestamp } from "firebase/firestore";
 import { auth, db } from "../lib/firebaseconfig";
 import type { User } from "../types/User";
 
@@ -26,8 +26,8 @@ export const authService = {
       const newUser: User = {
         id: user.uid,
         ...userData,
-        createdAt: new Date(),
-        updatedAt: new Date(),
+        createdAt: new Timestamp(Date.now() / 1000, 0),
+        updatedAt: new Timestamp(Date.now() / 1000, 0),
       };
 
       await setDoc(doc(db, "users", user.uid), newUser);
