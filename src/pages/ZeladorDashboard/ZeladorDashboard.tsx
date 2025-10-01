@@ -4,20 +4,45 @@ import type React from "react";
 import { useState, useEffect } from "react";
 import { useAuth } from "../../hooks/UseAuth";
 import { useNavigation } from "../../hooks/useNavigation";
-import { mockTasks } from "../../data/mockTasks";
+import { taskService } from "../../services/TaskService";
 import { type Task, TaskStatus } from "../../types/Task";
+import { UserRole } from "../../types/User";
 import Sidebar from "../../components/Sidebar/Sidebar";
 import TaskCard from "../../components/TaskComponents/TaskCard/TaskCard";
 import TaskExecution from "../../components/TaskComponents/TaskExecution/TaskExecution";
+import { FaSpinner, FaRedo } from "react-icons/fa";
 import "./ZeladorDashboard.css";
 
 const ZeladorDashboard: React.FC = () => {
   const { user } = useAuth();
   const { goTo } = useNavigation();
-  const [tasks, setTasks] = useState<Task[]>(mockTasks);
+  const [tasks, setTasks] = useState<Task[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
   const [currentTime, setCurrentTime] = useState(new Date());
   const [activeSection, setActiveSection] = useState("dashboard");
+
+  // Carregar dados dos serviços
+  const loadData = async () => {
+    if (!user) return;
+
+    try {
+      setLoading(true);
+      setError(null);
+      const tasksData = await taskService.getByZelador(user.email);
+      setTasks(tasksData);
+    } catch (error) {
+      console.error("Erro ao carregar tarefas:", error);
+      setError("Erro ao carregar suas tarefas");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    loadData();
+  }, [user]);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -26,43 +51,38 @@ const ZeladorDashboard: React.FC = () => {
     return () => clearInterval(timer);
   }, []);
 
-  if (!user) {
+  if (!user || user.role !== UserRole.ZELADOR) {
     goTo("/login");
     return null;
   }
 
-  const userTasks = tasks.filter((task) => task.assignedTo === user.email);
-
   const stats = {
-    pending: userTasks.filter((t) => t.status === TaskStatus.PENDING).length,
-    completed: userTasks.filter((t) => t.status === TaskStatus.COMPLETED)
-      .length,
-    overdue: userTasks.filter((t) => t.status === TaskStatus.OVERDUE).length,
-    total: userTasks.length,
+    pending: tasks.filter((t) => t.status === TaskStatus.PENDING).length,
+    completed: tasks.filter((t) => t.status === TaskStatus.COMPLETED).length,
+    overdue: tasks.filter((t) => t.status === TaskStatus.OVERDUE).length,
+    total: tasks.length,
   };
 
-  const handleTaskStart = (task: Task) => {
-    setSelectedTask(task);
-    setTasks((prev) =>
-      prev.map((t) =>
-        t.id === task.id ? { ...t, status: TaskStatus.IN_PROGRESS } : t
-      )
-    );
+  const handleTaskStart = async (task: Task) => {
+    try {
+      setSelectedTask(task);
+      await taskService.markAsInProgress(task.id);
+      await loadData(); // Recarregar dados
+    } catch (error) {
+      console.error("Erro ao iniciar tarefa:", error);
+      alert("Erro ao iniciar tarefa. Tente novamente.");
+    }
   };
 
-  const handleTaskComplete = (taskId: string, updatedTask: Task) => {
-    setTasks((prev) =>
-      prev.map((t) =>
-        t.id === taskId
-          ? {
-              ...updatedTask,
-              status: TaskStatus.COMPLETED,
-              completedAt: new Date(),
-            }
-          : t
-      )
-    );
-    setSelectedTask(null);
+  const handleTaskComplete = async (taskId: string, updatedTask: Task) => {
+    try {
+      await taskService.markAsCompleted(taskId);
+      await loadData(); // Recarregar dados
+      setSelectedTask(null);
+    } catch (error) {
+      console.error("Erro ao completar tarefa:", error);
+      alert("Erro ao completar tarefa. Tente novamente.");
+    }
   };
 
   const handleBackToList = () => {
@@ -70,14 +90,52 @@ const ZeladorDashboard: React.FC = () => {
   };
 
   const renderDashboardContent = () => {
+    if (loading && tasks.length === 0) {
+      return (
+        <div className="loading-container">
+          <div className="loading-spinner">
+            <FaSpinner className="spinning" />
+            Carregando suas tarefas...
+          </div>
+        </div>
+      );
+    }
+
+    if (error) {
+      return (
+        <div className="error-container">
+          <div className="error-message">{error}</div>
+        </div>
+      );
+    }
+
     return (
       <>
         <div className="dashboard-header">
           <h1>Dashboard</h1>
-          <p>
-            {currentTime.toLocaleDateString("pt-BR")} •{" "}
-            {currentTime.toLocaleTimeString("pt-BR")}
-          </p>
+          <div className="dashboard-header-info">
+            <p>
+              {currentTime.toLocaleDateString("pt-BR")} •{" "}
+              {currentTime.toLocaleTimeString("pt-BR")}
+            </p>
+            <button
+              className="refresh-button"
+              onClick={loadData}
+              disabled={loading}
+            >
+              {loading ? (
+                <>
+                  <FaSpinner className="spinning" />
+                  Atualizando...
+                </>
+              ) : (
+                <>
+                  <FaRedo />
+                  Atualizar
+                </>
+              )}
+            </button>
+          </div>
         </div>
 
         <div className="dashboard-stats">
@@ -107,14 +165,14 @@ const ZeladorDashboard: React.FC = () => {
             </div>
           </div>
           <div className="tasks-list">
-            {userTasks.length === 0 ? (
+            {tasks.length === 0 ? (
               <div
                 style={{ padding: "40px", textAlign: "center", color: "#666" }}
               >
                 Nenhuma tarefa encontrada para hoje.
               </div>
             ) : (
-              userTasks.map((task) => (
+              tasks.map((task) => (
                 <TaskCard
                   key={task.id}
                   task={task}

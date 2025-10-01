@@ -6,7 +6,8 @@
 
 .reports-header {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
+  flex-direction: column;
   align-items: center;
   margin-bottom: 30px;
   flex-wrap: wrap;
@@ -24,6 +25,14 @@
   margin: 0;
   color: #6b7280;
   font-size: 0.95rem;
+}
+
+.reports-header-buttons {
+  display: flex !important;
+  justify-content: flex-end !important;
+  width: 100% !important;
+  gap: 10px;
+  margin-top: 20px !important;
 }
 
 /* Filtros */
@@ -405,5 +414,139 @@
 
   .compliance-stats {
     grid-template-columns: 1fr;
+  }
+}
+
+/* Spinning animation for React Icons */
+.spinning {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Loading Container */
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 400px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  margin: 20px 0;
+}
+
+.loading-spinner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 18px;
+  color: #666;
+  font-weight: 500;
+}
+
+.loading-spinner::before {
+  content: "";
+  width: 24px;
+  height: 24px;
+  border: 3px solid #e5e7eb;
+  border-top: 3px solid #3b82f6;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+/* Error Container */
+.error-container {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+  padding: 16px;
+  margin: 20px 0;
+}
+
+.error-message {
+  color: #dc2626;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  justify-content: center;
+}
+
+.error-message::before {
+  content: "⚠️";
+  font-size: 16px;
+}
+
+/* Refresh Button in Header */
+.reports-header .refresh-button {
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 2px 4px rgba(59, 130, 246, 0.3);
+}
+
+.reports-header .refresh-button:hover:not(:disabled) {
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(59, 130, 246, 0.4);
+}
+
+.reports-header .refresh-button:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(59, 130, 246, 0.3);
+}
+
+.reports-header .refresh-button:disabled {
+  background: #9ca3af;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* Responsive adjustments for loading and error */
+@media (max-width: 768px) {
+  .loading-container {
+    min-height: 300px;
+    margin: 15px 0;
+  }
+
+  .loading-spinner {
+    font-size: 16px;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .error-message {
+    text-align: center;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .reports-header {
+    flex-direction: column;
+    gap: 16px;
+    text-align: center;
+  }
+
+  .reports-header .refresh-button {
+    width: 100%;
+    justify-content: center;
   }
 }

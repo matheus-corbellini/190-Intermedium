@@ -1,3 +1,5 @@
+import type { Timestamp } from "firebase/firestore";
+
 export interface QuestionTemplate {
   id: string;
   question: string;
@@ -15,6 +17,28 @@ export interface TaskTemplate {
   priority: "low" | "medium" | "high";
   questions: QuestionTemplate[];
   setorId: string;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: Timestamp;
+  updatedAt: Timestamp;
+}
+export interface CreateTaskTemplateData {
+  title: string;
+  description: string;
+  estimatedDuration: number;
+  priority: "low" | "medium" | "high";
+  questions: Omit<QuestionTemplate, "id">[];
+  setorId: string;
+}
+
+export interface UpdateTaskTemplateData {
+  title?: string;
+  description?: string;
+  estimatedDuration?: number;
+  priority?: "low" | "medium" | "high";
+  questions?: QuestionTemplate[];
+  setorId?: string;
+}
+export interface TaskTemplateFilters {
+  setorId?: string;
+  priority?: "low" | "medium" | "high";
+  category?: string;
 }

@@ -4,10 +4,11 @@ import type React from "react";
 import { useState, useEffect, useCallback } from "react";
 import { useAuth } from "../../hooks/UseAuth";
 import { useNavigation } from "../../hooks/useNavigation";
-import { mockTasks } from "../../data/mockTasks";
-import { mockSetores } from "../../data/mockSetores";
+import { taskService } from "../../services/TaskService";
+import { setorService } from "../../services/SetorService";
 import { type Task, TaskStatus } from "../../types/Task";
 import { UserRole } from "../../types/User";
+import { FaRedo, FaSpinner } from "react-icons/fa";
 import GerenteSidebar from "../../components/GerenteComponents/GerenteSidebar/GerenteSidebar";
 import GerenteTaskCard from "../../components/GerenteComponents/GerenteTaskCard/GerenteTaskCard";
 import TaskDetailsModal from "../../components/GerenteComponents/TaskDetailsModal/TaskDetailsModal";
@@ -15,16 +16,19 @@ import SetorManagement from "../../components/GerenteComponents/SetorManagement/
 import TaskManagement from "../../components/GerenteComponents/TaskManagement/TaskManagement";
 import ReportsSection from "../../components/GerenteComponents/ReportsSection/ReportsSection";
 import "./GerenteDashboard.css";
+import type { Setor } from "../../types/Setor";
 
 const GerenteDashboard: React.FC = () => {
   const { user } = useAuth();
   const { goTo } = useNavigation();
-  const [tasks] = useState<Task[]>(mockTasks);
-  const [filteredTasks, setFilteredTasks] = useState<Task[]>(mockTasks);
+  const [tasks, setTasks] = useState<Task[]>([]);
+  const [setores, setSetores] = useState<Setor[]>([]);
+  const [filteredTasks, setFilteredTasks] = useState<Task[]>([]);
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
   const [currentTime, setCurrentTime] = useState(new Date());
   const [activeSection, setActiveSection] = useState("dashboard");
-
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   // Filtros
   const [filters, setFilters] = useState({
     setor: "",
@@ -39,6 +43,28 @@ const GerenteDashboard: React.FC = () => {
       setCurrentTime(new Date());
     }, 1000);
     return () => clearInterval(timer);
+  }, []);
+
+  const refreshData = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const [tasks, setoresData] = await Promise.all([
+        taskService.getAll(),
+        setorService.getAll(),
+      ]);
+      setTasks(tasks);
+      setSetores(setoresData);
+    } catch (error) {
+      console.error("Erro ao carregar dados:", error);
+      setError("Erro ao carregar dados");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    refreshData();
   }, []);
 
   const applyFilters = useCallback(() => {
@@ -58,13 +84,13 @@ const GerenteDashboard: React.FC = () => {
 
     if (filters.dateFrom) {
       const fromDate = new Date(filters.dateFrom);
-      filtered = filtered.filter((task) => task.createdAt >= fromDate);
+      filtered = filtered.filter((task) => task.createdAt.toDate() >= fromDate);
     }
 
     if (filters.dateTo) {
       const toDate = new Date(filters.dateTo);
       toDate.setHours(23, 59, 59, 999);
-      filtered = filtered.filter((task) => task.createdAt <= toDate);
+      filtered = filtered.filter((task) => task.createdAt.toDate() <= toDate);
     }
 
     setFilteredTasks(filtered);
@@ -106,8 +132,20 @@ const GerenteDashboard: React.FC = () => {
   const uniqueZeladores = [...new Set(tasks.map((task) => task.assignedTo))];
 
   const renderDashboardContent = () => {
+    if (loading) {
+      return (
+        <div className="loading-container">
+          <div className="loading-spinner">Carregando...</div>
+        </div>
+      );
+    }
     return (
       <>
+        {error && (
+          <div className="error-container">
+            <div className="error-message">{error}</div>
+          </div>
+        )}
         <div className="dashboard-header">
           <div>
             <h1>Dashboard Gerencial</h1>
@@ -115,6 +153,26 @@ const GerenteDashboard: React.FC = () => {
               {currentTime.toLocaleDateString("pt-BR")} •{" "}
               {currentTime.toLocaleTimeString("pt-BR")}
             </p>
+          </div>
+          <div style={{ display: "flex", gap: "10px" }}>
+            <button
+              className="refresh-button"
+              onClick={refreshData}
+              disabled={loading}
+              title="Atualizar dados"
+            >
+              {loading ? (
+                <>
+                  <FaSpinner className="spinning" />
+                  Atualizando...
+                </>
+              ) : (
+                <>
+                  <FaRedo />
+                  Atualizar
+                </>
+              )}
+            </button>
           </div>
         </div>
 
@@ -146,7 +204,7 @@ const GerenteDashboard: React.FC = () => {
                 onChange={(e) => handleFilterChange("setor", e.target.value)}
               >
                 <option value="">Todos os setores</option>
-                {mockSetores.map((setor) => (
+                {setores.map((setor) => (
                   <option key={setor.id} value={setor.name}>
                     {setor.name}
                   </option>
@@ -203,6 +261,23 @@ const GerenteDashboard: React.FC = () => {
               onClick={clearFilters}
             >
               Limpar Filtros
+            </button>
+            <button
+              className="filter-button filter-refresh"
+              onClick={refreshData}
+              disabled={loading}
+            >
+              {loading ? (
+                <>
+                  <FaSpinner className="spinning" />
+                  Atualizando...
+                </>
+              ) : (
+                <>
+                  <FaRedo />
+                  Atualizar
+                </>
+              )}
             </button>
           </div>
         </div>

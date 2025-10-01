@@ -28,6 +28,26 @@ const TaskDetailsModal: React.FC<TaskDetailsModalProps> = ({
   task,
   onClose,
 }) => {
+  // Função auxiliar para converter Timestamp para string formatada
+  const formatTimestamp = (timestamp: unknown): string => {
+    if (typeof timestamp === "object" && timestamp && "toDate" in timestamp) {
+      const date = (timestamp as { toDate: () => Date }).toDate();
+      return (
+        date.toLocaleDateString("pt-BR") +
+        " às " +
+        date.toLocaleTimeString("pt-BR")
+      );
+    } else if (typeof timestamp === "string") {
+      return timestamp;
+    } else {
+      const date = new Date(timestamp as string | number | Date);
+      return (
+        date.toLocaleDateString("pt-BR") +
+        " às " +
+        date.toLocaleTimeString("pt-BR")
+      );
+    }
+  };
   const getStatusText = (status: TaskStatus) => {
     switch (status) {
       case TaskStatus.PENDING:
@@ -128,7 +148,7 @@ const TaskDetailsModal: React.FC<TaskDetailsModalProps> = ({
               <div className="meta-label">Horário</div>
               <div className="meta-value">
                 <FaClock style={{ marginRight: 5 }} />
-                {task.scheduledTime}
+                {formatTimestamp(task.scheduledTime)}
               </div>
             </div>
             <div className="meta-item">
@@ -147,8 +167,7 @@ const TaskDetailsModal: React.FC<TaskDetailsModalProps> = ({
               <div className="completion-details">
                 <div className="completion-item">
                   <strong>Concluída em:</strong>{" "}
-                  {task.completedAt.toLocaleDateString("pt-BR")} às{" "}
-                  {task.completedAt.toLocaleTimeString("pt-BR")}
+                  {formatTimestamp(task.completedAt)}
                 </div>
               </div>
             </div>

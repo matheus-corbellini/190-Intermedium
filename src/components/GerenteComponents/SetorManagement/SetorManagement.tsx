@@ -1,11 +1,20 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./SetorManagement.css";
 import type { Setor } from "../../../types/Setor";
-import { mockSetores } from "../../../data/mockSetores";
-import { FaPlus, FaEdit, FaTrash, FaMapMarkerAlt } from "react-icons/fa";
+import { setorService } from "../../../services/SetorService";
+import {
+  FaPlus,
+  FaEdit,
+  FaTrash,
+  FaMapMarkerAlt,
+  FaSpinner,
+  FaRedo,
+} from "react-icons/fa";
 
 const SetorManagement: React.FC = () => {
-  const [setores, setSetores] = useState<Setor[]>(mockSetores);
+  const [setores, setSetores] = useState<Setor[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [showForm, setShowForm] = useState(false);
   const [editingSetor, setEditingSetor] = useState<Setor | null>(null);
   const [formData, setFormData] = useState({
@@ -13,6 +22,25 @@ const SetorManagement: React.FC = () => {
     description: "",
     location: "",
   });
+
+  // Carregar dados dos serviços
+  const loadData = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const setoresData = await setorService.getAll();
+      setSetores(setoresData);
+    } catch (error) {
+      console.error("Erro ao carregar setores:", error);
+      setError("Erro ao carregar dados de setores");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    loadData();
+  }, []);
 
   const handleAddSetor = () => {
     setEditingSetor(null);
@@ -34,38 +62,63 @@ const SetorManagement: React.FC = () => {
     setShowForm(true);
   };
 
-  const handleDeleteSetor = (setorId: string) => {
+  const handleDeleteSetor = async (setorId: string) => {
     if (window.confirm("Tem certeza que deseja excluir este setor?")) {
-      setSetores((prev) => prev.filter((s) => s.id !== setorId));
+      try {
+        setLoading(true);
+        await setorService.delete(setorId);
+        await loadData();
+      } catch (error) {
+        console.error("Erro ao deletar setor:", error);
+        alert("Erro ao deletar setor. Tente novamente.");
+      } finally {
+        setLoading(false);
+      }
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (editingSetor) {
-      setSetores((prev) =>
-        prev.map((s) =>
-          s.id === editingSetor.id
-            ? { ...s, ...formData, updatedAt: new Date() }
-            : s
-        )
-      );
-    } else {
-      const newSetor: Setor = {
-        id: Date.now().toString(),
-        ...formData,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      };
-      setSetores((prev) => [...prev, newSetor]);
+    if (!formData.name || !formData.description || !formData.location) {
+      alert("Por favor, preencha todos os campos obrigatórios");
+      return;
     }
-    setShowForm(false);
-    setFormData({
-      name: "",
-      description: "",
-      location: "",
-    });
+
+    try {
+      setLoading(true);
+
+      if (editingSetor) {
+        // Atualizar setor existente
+        await setorService.update(editingSetor.id, {
+          name: formData.name,
+          description: formData.description,
+          location: formData.location,
+        });
+      } else {
+        // Criar novo setor
+        await setorService.create({
+          name: formData.name,
+          description: formData.description,
+          location: formData.location,
+        });
+      }
+
+      // Recarregar dados
+      await loadData();
+
+      setShowForm(false);
+      setFormData({
+        name: "",
+        description: "",
+        location: "",
+      });
+    } catch (error) {
+      console.error("Erro ao salvar setor:", error);
+      alert("Erro ao salvar setor. Tente novamente.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleCancel = () => {
@@ -88,14 +141,52 @@ const SetorManagement: React.FC = () => {
     }));
   };
 
+  if (loading && setores.length === 0) {
+    return (
+      <div className="loading-container">
+        <div className="loading-spinner">
+          <FaSpinner className="spinning" />
+          Carregando setores...
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="error-container">
+        <div className="error-message">{error}</div>
+      </div>
+    );
+  }
+
   return (
     <div className="setor-management">
       <div className="setor-management-header">
         <h2>Gerenciar Setores</h2>
-        <button className="add-setor-button" onClick={handleAddSetor}>
-          <FaPlus />
-          Adicionar Setor
-        </button>
+        <div className="setor-management-actions">
+          <button
+            className="refresh-button"
+            onClick={loadData}
+            disabled={loading}
+          >
+            {loading ? (
+              <>
+                <FaSpinner className="spinning" />
+                Atualizando...
+              </>
+            ) : (
+              <>
+                <FaRedo />
+                Atualizar
+              </>
+            )}
+          </button>
+          <button className="add-setor-button" onClick={handleAddSetor}>
+            <FaPlus />
+            Adicionar Setor
+          </button>
+        </div>
       </div>
 
       <div className="setores-list">

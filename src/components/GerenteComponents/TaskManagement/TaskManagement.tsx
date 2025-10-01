@@ -1,25 +1,30 @@
 "use client";
 
 import type React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./TaskManagement.css";
-import { mockTaskTemplates } from "../../../data/mockTaskTemplates";
-import { mockSetores } from "../../../data/mockSetores";
+import { taskTemplateService } from "../../../services/TaskTemplateService";
+import { setorService } from "../../../services/SetorService";
 import type {
   TaskTemplate,
   QuestionTemplate,
 } from "../../../types/QuestionTemplate";
+import type { Setor } from "../../../types/Setor";
 import {
   FaPlus,
   FaEdit,
   FaTrash,
   FaClock,
   FaQuestionCircle,
+  FaSpinner,
+  FaRedo,
 } from "react-icons/fa";
 
 const TaskManagement: React.FC = () => {
-  const [taskTemplates, setTaskTemplates] =
-    useState<TaskTemplate[]>(mockTaskTemplates);
+  const [taskTemplates, setTaskTemplates] = useState<TaskTemplate[]>([]);
+  const [setores, setSetores] = useState<Setor[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [showForm, setShowForm] = useState(false);
   const [editingTemplate, setEditingTemplate] = useState<TaskTemplate | null>(
     null
@@ -31,6 +36,29 @@ const TaskManagement: React.FC = () => {
     priority: "medium" as "low" | "medium" | "high",
     setorId: "",
   });
+
+  // Carregar dados dos serviços
+  const loadData = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const [templatesData, setoresData] = await Promise.all([
+        taskTemplateService.getAll(),
+        setorService.getAll(),
+      ]);
+      setTaskTemplates(templatesData);
+      setSetores(setoresData);
+    } catch (error) {
+      console.error("Erro ao carregar dados:", error);
+      setError("Erro ao carregar dados de gerenciamento de tarefas");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    loadData();
+  }, []);
   const [questions, setQuestions] = useState<QuestionTemplate[]>([]);
 
   const handleAddTemplate = () => {
@@ -59,47 +87,79 @@ const TaskManagement: React.FC = () => {
     setShowForm(true);
   };
 
-  const handleDeleteTemplate = (templateId: string) => {
+  const handleDeleteTemplate = async (templateId: string) => {
     if (
       window.confirm("Tem certeza que deseja excluir este modelo de tarefa?")
     ) {
-      setTaskTemplates((prev) => prev.filter((t) => t.id !== templateId));
+      try {
+        setLoading(true);
+        await taskTemplateService.delete(templateId);
+        await loadData();
+      } catch (error) {
+        console.error("Erro ao deletar template:", error);
+        alert("Erro ao deletar template. Tente novamente.");
+      } finally {
+        setLoading(false);
+      }
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (editingTemplate) {
-      // Editar template existente
-      setTaskTemplates((prev) =>
-        prev.map((t) =>
-          t.id === editingTemplate.id
-            ? { ...t, ...formData, questions, updatedAt: new Date() }
-            : t
-        )
-      );
-    } else {
-      // Adicionar novo template
-      const newTemplate: TaskTemplate = {
-        id: Date.now().toString(),
-        ...formData,
-        questions,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      };
-      setTaskTemplates((prev) => [...prev, newTemplate]);
+    if (!formData.title || !formData.description) {
+      alert("Por favor, preencha todos os campos obrigatórios");
+      return;
     }
 
-    setShowForm(false);
-    setFormData({
-      title: "",
-      description: "",
-      estimatedDuration: 30,
-      priority: "medium",
-      setorId: "",
-    });
-    setQuestions([]);
+    if (questions.length === 0) {
+      alert("Por favor, adicione pelo menos uma pergunta");
+      return;
+    }
+
+    try {
+      setLoading(true);
+
+      if (editingTemplate) {
+        // Atualizar template existente
+        await taskTemplateService.update(editingTemplate.id, {
+          title: formData.title,
+          description: formData.description,
+          estimatedDuration: formData.estimatedDuration,
+          priority: formData.priority,
+          setorId: formData.setorId,
+          questions: questions,
+        });
+      } else {
+        // Criar novo template
+        await taskTemplateService.create({
+          title: formData.title,
+          description: formData.description,
+          estimatedDuration: formData.estimatedDuration,
+          priority: formData.priority,
+          setorId: formData.setorId,
+          questions: questions,
+        });
+      }
+
+      // Recarregar dados
+      await loadData();
+
+      setShowForm(false);
+      setFormData({
+        title: "",
+        description: "",
+        estimatedDuration: 30,
+        priority: "medium",
+        setorId: "",
+      });
+      setQuestions([]);
+    } catch (error) {
+      console.error("Erro ao salvar template:", error);
+      alert("Erro ao salvar template. Tente novamente.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleCancel = () => {
@@ -167,18 +227,56 @@ const TaskManagement: React.FC = () => {
   };
 
   const getSetorName = (setorId: string) => {
-    const setor = mockSetores.find((s) => s.id === setorId);
+    const setor = setores.find((s) => s.id === setorId);
     return setor ? setor.name : "Setor não encontrado";
   };
+
+  if (loading && taskTemplates.length === 0) {
+    return (
+      <div className="loading-container">
+        <div className="loading-spinner">
+          <FaSpinner className="spinning" />
+          Carregando modelos de tarefas...
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="error-container">
+        <div className="error-message">{error}</div>
+      </div>
+    );
+  }
 
   return (
     <div className="task-management">
       <div className="task-management-header">
         <h2>Gerenciar Modelos de Tarefas</h2>
-        <button className="add-task-button" onClick={handleAddTemplate}>
-          <FaPlus />
-          Adicionar Modelo
-        </button>
+        <div className="task-management-actions">
+          <button
+            className="refresh-button"
+            onClick={loadData}
+            disabled={loading}
+          >
+            {loading ? (
+              <>
+                <FaSpinner className="spinning" />
+                Atualizando...
+              </>
+            ) : (
+              <>
+                <FaRedo />
+                Atualizar
+              </>
+            )}
+          </button>
+          <button className="add-task-button" onClick={handleAddTemplate}>
+            <FaPlus />
+            Adicionar Modelo
+          </button>
+        </div>
       </div>
 
       <div className="task-templates-list">
@@ -304,7 +402,7 @@ const TaskManagement: React.FC = () => {
                   required
                 >
                   <option value="">Selecione um setor</option>
-                  {mockSetores.map((setor) => (
+                  {setores.map((setor) => (
                     <option key={setor.id} value={setor.id}>
                       {setor.name}
                     </option>

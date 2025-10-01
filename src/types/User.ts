@@ -15,3 +15,22 @@ export type User = {
   createdAt: Timestamp;
   updatedAt: Timestamp;
 };
+export interface CreateUserData {
+  name: string;
+  email: string;
+  role: UserRole;
+  setor?: string;
+}
+
+export interface UpdateUserData {
+  name?: string;
+  email?: string;
+  role?: UserRole;
+  setor?: string;
+}
+
+export interface UserFilters {
+  role?: UserRole;
+  setor?: string;
+  search?: string;
+}

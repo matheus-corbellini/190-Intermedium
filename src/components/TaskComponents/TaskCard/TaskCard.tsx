@@ -15,6 +15,26 @@ interface TaskCardProps {
 }
 
 const TaskCard: React.FC<TaskCardProps> = ({ task, onStart }) => {
+  // Função auxiliar para converter Timestamp para string formatada
+  const formatTimestamp = (timestamp: unknown): string => {
+    if (typeof timestamp === "object" && timestamp && "toDate" in timestamp) {
+      const date = (timestamp as { toDate: () => Date }).toDate();
+      return (
+        date.toLocaleDateString("pt-BR") +
+        " às " +
+        date.toLocaleTimeString("pt-BR")
+      );
+    } else if (typeof timestamp === "string") {
+      return timestamp;
+    } else {
+      const date = new Date(timestamp as string | number | Date);
+      return (
+        date.toLocaleDateString("pt-BR") +
+        " às " +
+        date.toLocaleTimeString("pt-BR")
+      );
+    }
+  };
   const getStatusText = (status: TaskStatus) => {
     switch (status) {
       case TaskStatus.PENDING:
@@ -96,7 +116,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, onStart }) => {
             </div>
             <div className="task-time">
               <FaClock />
-              {task.scheduledTime}
+              {formatTimestamp(task.scheduledTime)}
             </div>
             <div className="task-duration">
               <FaHourglass />
