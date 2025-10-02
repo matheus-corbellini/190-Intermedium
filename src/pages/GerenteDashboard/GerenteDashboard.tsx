@@ -17,6 +17,7 @@ import TaskManagement from "../../components/GerenteComponents/TaskManagement/Ta
 import ReportsSection from "../../components/GerenteComponents/ReportsSection/ReportsSection";
 import "./GerenteDashboard.css";
 import type { Setor } from "../../types/Setor";
+import FuncionarioManagement from "../../components/GerenteComponents/FuncionarioManagement/FuncionarioManagement";
 
 const GerenteDashboard: React.FC = () => {
   const { user } = useAuth();
@@ -315,6 +316,8 @@ const GerenteDashboard: React.FC = () => {
     switch (activeSection) {
       case "dashboard":
         return renderDashboardContent();
+      case "funcionarios":
+        return <FuncionarioManagement />;
       case "setores":
         return <SetorManagement />;
       case "tasks":

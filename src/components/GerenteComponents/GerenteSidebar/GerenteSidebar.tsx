@@ -13,6 +13,8 @@ import {
   FaTasks,
   FaChartBar,
   FaSignOutAlt,
+  FaUserCheck,
+  FaUsers,
 } from "react-icons/fa";
 
 interface GerenteSidebarProps {
@@ -47,6 +49,11 @@ const GerenteSidebar: React.FC<GerenteSidebarProps> = ({
       icon: FaTachometerAlt,
     },
     {
+      id: "funcionarios",
+      label: "Gerenciar Funcionarios",
+      icon: FaUsers,
+    },
+    {
       id: "setores",
       label: "Gerenciar Setores",
       icon: FaBuilding,
@@ -55,6 +62,11 @@ const GerenteSidebar: React.FC<GerenteSidebarProps> = ({
       id: "tasks",
       label: "Gerenciar Tarefas",
       icon: FaTasks,
+    },
+    {
+      id: "atribuirTarefas",
+      label: "Atribuir Tarefas",
+      icon: FaUserCheck,
     },
     {
       id: "reports",
