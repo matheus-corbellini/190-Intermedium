@@ -18,6 +18,7 @@ import ReportsSection from "../../components/GerenteComponents/ReportsSection/Re
 import "./GerenteDashboard.css";
 import type { Setor } from "../../types/Setor";
 import FuncionarioManagement from "../../components/GerenteComponents/FuncionarioManagement/FuncionarioManagement";
+import TaskAssignment from "../../components/GerenteComponents/TaskAssignment/TaskAssignment";
 
 const GerenteDashboard: React.FC = () => {
   const { user } = useAuth();
@@ -130,7 +131,9 @@ const GerenteDashboard: React.FC = () => {
     total: filteredTasks.length,
   };
 
-  const uniqueZeladores = [...new Set(tasks.map((task) => task.assignedTo))];
+  const uniqueZeladores = [
+    ...new Set(tasks.map((task) => task.assignedTo)),
+  ].filter(Boolean);
 
   const renderDashboardContent = () => {
     if (loading) {
@@ -206,7 +209,10 @@ const GerenteDashboard: React.FC = () => {
               >
                 <option value="">Todos os setores</option>
                 {setores.map((setor) => (
-                  <option key={setor.id} value={setor.name}>
+                  <option
+                    key={`dashboard-setor-${setor.id}`}
+                    value={setor.name}
+                  >
                     {setor.name}
                   </option>
                 ))}
@@ -219,8 +225,8 @@ const GerenteDashboard: React.FC = () => {
                 onChange={(e) => handleFilterChange("zelador", e.target.value)}
               >
                 <option value="">Todos os zeladores</option>
-                {uniqueZeladores.map((zelador) => (
-                  <option key={zelador} value={zelador}>
+                {uniqueZeladores.map((zelador, index) => (
+                  <option key={`zelador-${index}-${zelador}`} value={zelador}>
                     {zelador}
                   </option>
                 ))}
@@ -322,6 +328,8 @@ const GerenteDashboard: React.FC = () => {
         return <SetorManagement />;
       case "tasks":
         return <TaskManagement />;
+      case "atribuirTarefas":
+        return <TaskAssignment />;
       case "reports":
         return <ReportsSection />;
       default:

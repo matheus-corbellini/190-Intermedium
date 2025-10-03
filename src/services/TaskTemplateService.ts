@@ -18,12 +18,15 @@ import type {
   CreateTaskTemplateData,
   UpdateTaskTemplateData,
 } from "../types/QuestionTemplate";
+import type { ChecklistItem } from "../types/Task";
+import { ChecklistItemStatus } from "../types/Task";
+import { taskService } from "./TaskService";
+import type { Task } from "../types/Task";
 
 export const taskTemplateService = {
   // Listar todos os templates (com filtros opcionais)
   async getAll(filters?: TaskTemplateFilters): Promise<TaskTemplate[]> {
     try {
-      console.log("Buscando templates...");
       const templatesRef = collection(db, "taskTemplates");
       let q = query(templatesRef, orderBy("createdAt", "desc"));
 
@@ -36,12 +39,10 @@ export const taskTemplateService = {
       }
 
       const querySnapshot = await getDocs(q);
-      console.log(`Encontrados ${querySnapshot.size} documentos`);
 
       const templates: TaskTemplate[] = [];
       querySnapshot.forEach((doc) => {
         const data = doc.data();
-        console.log("Documento encontrado:", doc.id, data);
         const template = this.convertFirestoreToTaskTemplate(doc.id, data);
 
         // Aplicar filtro de categoria (se especificado)
@@ -57,7 +58,6 @@ export const taskTemplateService = {
         templates.push(template);
       });
 
-      console.log(`Retornando ${templates.length} templates`);
       return templates;
     } catch (error) {
       console.error("Erro ao buscar templates:", error);
@@ -88,7 +88,6 @@ export const taskTemplateService = {
   // Criar novo template
   async create(data: CreateTaskTemplateData): Promise<TaskTemplate> {
     try {
-      console.log("Criando template com dados:", data);
       const templatesRef = collection(db, "taskTemplates");
       const now = Timestamp.now();
 
@@ -105,9 +104,7 @@ export const taskTemplateService = {
         updatedAt: now,
       };
 
-      console.log("Dados a serem salvos:", newTemplateData);
       const docRef = await addDoc(templatesRef, newTemplateData);
-      console.log("Template criado com ID:", docRef.id);
 
       return {
         id: docRef.id,
@@ -283,8 +280,44 @@ export const taskTemplateService = {
     }
   },
 
+  async createTaskFromTemplate(
+    templateId: string,
+    setorId: string
+  ): Promise<Task> {
+    try {
+      const template = await this.getById(templateId);
+      if (!template) {
+        throw new Error("Template não encontrado");
+      }
+
+      const checklist: Omit<ChecklistItem, "id">[] = template.questions.map(
+        (q) => ({
+          question: q.question,
+          status: ChecklistItemStatus.PENDING,
+          isEquipment: q.isEquipment,
+          equipmentName: q.equipmentName,
+        })
+      );
+
+      const taskData = {
+        title: template.title,
+        description: template.description,
+        setor: setorId,
+        scheduledTime: "08:00",
+        estimatedDuration: template.estimatedDuration,
+        checklist: checklist,
+        priority: template.priority,
+      };
+
+      return await taskService.create(taskData);
+    } catch (error) {
+      console.error("Erro ao criar tarefa a partir do template:", error);
+      throw new Error("Erro ao criar tarefa a partir do template");
+    }
+  },
+
   // Função auxiliar para converter dados do Firestore para TaskTemplate
-  convertFirestoreToTaskTemplate(id: string, data: any): TaskTemplate {
+  convertFirestoreToTaskTemplate(id: string, data: TaskTemplate): TaskTemplate {
     return {
       id,
       title: data.title,

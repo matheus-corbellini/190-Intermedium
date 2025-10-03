@@ -32,7 +32,7 @@ export interface Task {
   scheduledTime: string;
   estimatedDuration: number;
   checklist: ChecklistItem[];
-  assignedTo: string;
+  assignedTo?: string;
   createdAt: Timestamp;
   completedAt?: Timestamp;
   priority: "low" | "medium" | "high";
@@ -46,8 +46,8 @@ export interface CreateTaskData {
   scheduledTime: string;
   estimatedDuration: number;
   checklist: Omit<ChecklistItem, "id">[];
-  assignedTo: string;
-  priority: "low" | "medium" | "high";
+  assignedTo?: string;
+  priority?: "low" | "medium" | "high";
 }
 
 export interface UpdateTaskData {
@@ -58,7 +58,7 @@ export interface UpdateTaskData {
   scheduledTime?: string;
   estimatedDuration?: number;
   checklist?: ChecklistItem[];
-  assignedTo?: string;
+  assignedTo?: string | null;
   priority?: "low" | "medium" | "high";
   completedAt?: Timestamp;
 }

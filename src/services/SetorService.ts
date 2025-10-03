@@ -16,15 +16,12 @@ import type { Setor, CreateSetor, UpdateSetor } from "../types/Setor";
 export const setorService = {
   async getAll(): Promise<Setor[]> {
     try {
-      console.log("Buscando setores...");
       const setorRef = collection(db, "setores");
       const querySnapshot = await getDocs(setorRef);
-      console.log(`Encontrados ${querySnapshot.size} setores`);
 
       const setores: Setor[] = [];
       querySnapshot.forEach((doc) => {
         const data = doc.data();
-        console.log("Setor encontrado:", doc.id, data);
         setores.push({
           id: doc.id,
           name: data.name,
@@ -34,7 +31,7 @@ export const setorService = {
           updatedAt: data.updatedAt.toDate(),
         });
       });
-      console.log(`Retornando ${setores.length} setores`);
+
       return setores;
     } catch (error) {
       console.error("Erro ao buscar setores:", error);
@@ -68,7 +65,6 @@ export const setorService = {
 
   async create(data: CreateSetor): Promise<Setor> {
     try {
-      console.log("Criando setor com dados:", data);
       const existingSetor = await this.getByName(data.name);
       if (existingSetor) {
         throw new Error("Setor já existe");
@@ -83,9 +79,7 @@ export const setorService = {
         updatedAt: now,
       };
 
-      console.log("Dados a serem salvos:", newSetorData);
       const docRef = await addDoc(setoresRef, newSetorData);
-      console.log("Setor criado com ID:", docRef.id);
 
       return {
         id: docRef.id,

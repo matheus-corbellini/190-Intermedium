@@ -37,6 +37,20 @@ const FuncionarioManagement: React.FC = () => {
     loadData();
   }, []);
 
+  // Atualizar dados ao voltar para a seção
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (!document.hidden) {
+        loadData();
+      }
+    };
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
+  }, []);
+
   // Aplicar filtros
   useEffect(() => {
     const applyFilters = () => {

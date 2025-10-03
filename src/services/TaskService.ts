@@ -241,6 +241,46 @@ export const taskService = {
     });
   },
 
+  async getUnassigned(): Promise<Task[]> {
+    try {
+      const tasksRef = collection(db, "tasks");
+      const querySnapshot = await getDocs(tasksRef);
+      const tasks: Task[] = [];
+
+      querySnapshot.forEach((doc) => {
+        const data = doc.data();
+        // Incluir tarefas sem assignedTo ou com assignedTo null/undefined/vazio
+        if (
+          !data.assignedTo ||
+          data.assignedTo === null ||
+          data.assignedTo === ""
+        ) {
+          tasks.push(this.convertFirestoreToTask(doc.id, data as Task));
+        }
+      });
+
+      return tasks;
+    } catch (error) {
+      console.error("Erro ao buscar tarefas não atribuídas:", error);
+      throw new Error("Erro ao carregar tarefas não atribuídas");
+    }
+  },
+
+  async assignTask(taskId: string, zeladorId: string): Promise<Task> {
+    try {
+      const { zeladorService } = await import("../services/ZeladorService");
+      const zelador = await zeladorService.getById(zeladorId);
+      if (!zelador) {
+        throw new Error("Zelador não encontrado");
+      }
+
+      return await this.update(taskId, { assignedTo: zelador.email });
+    } catch (error) {
+      console.error("Erro ao atribuir tarefa:", error);
+      throw new Error("Erro ao atribuir tarefa");
+    }
+  },
+
   // Marcar tarefa como em andamento
   async markAsInProgress(id: string): Promise<Task> {
     return this.update(id, { status: TaskStatus.IN_PROGRESS });
