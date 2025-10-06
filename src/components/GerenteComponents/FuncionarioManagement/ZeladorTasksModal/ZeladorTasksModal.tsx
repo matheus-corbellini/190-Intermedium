@@ -44,7 +44,7 @@ const ZeladorTasksModal: React.FC<ZeladorTasksModalProps> = ({
       setLoading(true);
       setError(null);
       try {
-        const tasksData = await zeladorService.getTasks(zelador.id);
+        const tasksData = await zeladorService.getTasks(zelador.email);
         setTasks(tasksData);
       } catch (error) {
         console.error("Erro ao carregar tarefas:", error);

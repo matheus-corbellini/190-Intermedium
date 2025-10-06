@@ -162,13 +162,13 @@ export const taskService = {
     }
   },
 
-  // Buscar tarefas por zelador
-  async getByZelador(assignedTo: string): Promise<Task[]> {
+  // Buscar tarefas por zelador (por email)
+  async getByZelador(zeladorEmail: string): Promise<Task[]> {
     try {
       const tasksRef = collection(db, "tasks");
       const q = query(
         tasksRef,
-        where("assignedTo", "==", assignedTo),
+        where("assignedTo", "==", zeladorEmail),
         orderBy("createdAt", "desc")
       );
 

@@ -335,7 +335,8 @@
 
 .setor-badge,
 .duration-badge,
-.checklist-count {
+.checklist-count,
+.assigned-badge {
   background: #f3f4f6;
   color: #374151;
   padding: 4px 8px;
@@ -349,9 +350,48 @@
 
 .setor-badge svg,
 .duration-badge svg,
-.checklist-count svg {
+.checklist-count svg,
+.assigned-badge svg {
   color: #6b7280;
   font-size: 10px;
+}
+
+.assigned-badge {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+.assigned-badge svg {
+  color: #3b82f6;
+}
+
+.status-badge {
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.status-pending {
+  background: #fef3c7;
+  color: #d97706;
+}
+
+.status-in_progress {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+.status-completed {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.status-overdue {
+  background: #fef2f2;
+  color: #dc2626;
 }
 
 .priority-badge {
@@ -399,7 +439,9 @@
 .task-actions {
   display: flex;
   gap: 8px;
-  align-items: center;
+  align-items: flex-end;
+  justify-content: flex-end;
+  flex-direction: column;
 }
 
 .btn-assign {
@@ -421,6 +463,61 @@
   background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
   transform: translateY(-1px);
   box-shadow: 0 4px 8px rgba(59, 130, 246, 0.4);
+}
+
+.assigned-info {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: flex-end;
+}
+
+.assigned-text {
+  font-size: 12px;
+  color: #6b7280;
+  font-weight: 500;
+}
+
+.btn-reassign {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn-reassign:hover {
+  background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(245, 158, 11, 0.4);
+  transition: all 0.2s;
+}
+
+.btn-delete {
+  background: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%);
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 6px;
+  transition: all 0.2s;
+  cursor: pointer;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn-delete:hover {
+  background: linear-gradient(135deg, #b91c1c 0%, #991b1b 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(239, 68, 68, 0.4);
 }
 
 /* Estado vazio */

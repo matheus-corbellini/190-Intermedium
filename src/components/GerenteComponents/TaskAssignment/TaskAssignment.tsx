@@ -26,13 +26,14 @@ import AssignTaskModal from "./AssignTaskModal/AssignTaskModal";
 import "./TaskAssignment.css";
 
 const TaskAssignment: React.FC = () => {
-  const [unassignedTasks, setUnassignedTasks] = useState<Task[]>([]);
+  const [allTasks, setAllTasks] = useState<Task[]>([]);
   const [zeladores, setZeladores] = useState<Zelador[]>([]);
   const [setores, setSetores] = useState<Setor[]>([]);
   const [templates, setTemplates] = useState<TaskTemplate[]>([]);
 
   const [selectedSetor, setSelectedSetor] = useState<string>("");
   const [selectedPriority, setSelectedPriority] = useState<string>("");
+  const [selectedStatus, setSelectedStatus] = useState<string>("");
   const [searchTerm, setSearchTerm] = useState<string>("");
 
   const [showCreateModal, setShowCreateModal] = useState(false);
@@ -47,13 +48,13 @@ const TaskAssignment: React.FC = () => {
 
       const [tasksData, zeladoresData, setoresData, templatesData] =
         await Promise.all([
-          taskService.getUnassigned(),
+          taskService.getAll(),
           zeladorService.getAll(),
           setorService.getAll(),
           taskTemplateService.getAll(),
         ]);
 
-      setUnassignedTasks(tasksData);
+      setAllTasks(tasksData);
       setZeladores(zeladoresData);
       setSetores(setoresData);
       setTemplates(templatesData);
@@ -68,17 +69,21 @@ const TaskAssignment: React.FC = () => {
     loadData();
   }, []);
 
-  const filteredTasks = unassignedTasks.filter((task) => {
+  const filteredTasks = allTasks.filter((task) => {
     const matchesSetor = !selectedSetor || task.setor === selectedSetor;
     const matchesPriority =
       !selectedPriority || task.priority === selectedPriority;
+    const matchesStatus = !selectedStatus || task.status === selectedStatus;
     const matchesSearch =
       !searchTerm ||
       task.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
       task.description.toLowerCase().includes(searchTerm.toLowerCase());
 
-    return matchesSetor && matchesPriority && matchesSearch;
+    return matchesSetor && matchesPriority && matchesStatus && matchesSearch;
   });
+
+  const unassignedTasks = allTasks.filter((task) => !task.assignedTo);
+  const assignedTasks = allTasks.filter((task) => task.assignedTo);
 
   const handleAssignTask = (task: Task) => {
     setSelectedTask(task);
@@ -99,6 +104,7 @@ const TaskAssignment: React.FC = () => {
   const clearFilters = () => {
     setSelectedSetor("");
     setSelectedPriority("");
+    setSelectedStatus("");
     setSearchTerm("");
   };
 
@@ -125,6 +131,34 @@ const TaskAssignment: React.FC = () => {
         return "Baixa";
       default:
         return "";
+    }
+  };
+
+  const getStatusLabel = (status: string) => {
+    switch (status) {
+      case "PENDING":
+        return "Pendente";
+      case "IN_PROGRESS":
+        return "Em Andamento";
+      case "COMPLETED":
+        return "Concluída";
+      case "OVERDUE":
+        return "Atrasada";
+      default:
+        return status;
+    }
+  };
+
+  const getAssignedZeladorName = (assignedTo: string | undefined) => {
+    if (!assignedTo) return null;
+    const zelador = zeladores.find((z) => z.email === assignedTo);
+    return zelador ? zelador.name : assignedTo;
+  };
+
+  const deleteTask = async (taskId: string) => {
+    if (window.confirm("Tem certeza que deseja deletar esta tarefa?")) {
+      await taskService.delete(taskId);
+      loadData();
     }
   };
 
@@ -212,6 +246,23 @@ const TaskAssignment: React.FC = () => {
           </select>
         </div>
 
+        <div className="filter-group">
+          <label>
+            <FaCheckCircle className="filter-label-icon" />
+            Status
+          </label>
+          <select
+            value={selectedStatus}
+            onChange={(e) => setSelectedStatus(e.target.value)}
+          >
+            <option value="">Todos os status</option>
+            <option value="PENDING">Pendente</option>
+            <option value="IN_PROGRESS">Em Andamento</option>
+            <option value="COMPLETED">Concluída</option>
+            <option value="OVERDUE">Atrasada</option>
+          </select>
+        </div>
+
         <div className="filter-actions">
           <button className="filter-button filter-clear" onClick={clearFilters}>
             Limpar Filtros
@@ -222,15 +273,19 @@ const TaskAssignment: React.FC = () => {
       <div className="task-stats">
         <div className="stat-card">
           <span className="stat-number">{filteredTasks.length}</span>
-          <span className="stat-label">Tarefas Pendentes</span>
+          <span className="stat-label">Tarefas Filtradas</span>
         </div>
         <div className="stat-card">
           <span className="stat-number">{unassignedTasks.length}</span>
-          <span className="stat-label">Total de Tarefas</span>
+          <span className="stat-label">Não Atribuídas</span>
         </div>
         <div className="stat-card">
-          <span className="stat-number">{zeladores.length}</span>
-          <span className="stat-label">Zeladores Disponíveis</span>
+          <span className="stat-number">{assignedTasks.length}</span>
+          <span className="stat-label">Atribuídas</span>
+        </div>
+        <div className="stat-card">
+          <span className="stat-number">{allTasks.length}</span>
+          <span className="stat-label">Total de Tarefas</span>
         </div>
       </div>
 
@@ -272,15 +327,48 @@ const TaskAssignment: React.FC = () => {
                     <FaFileAlt />
                     {task.checklist.length} itens
                   </span>
+                  {task.assignedTo && (
+                    <span className="assigned-badge">
+                      <FaUser />
+                      {getAssignedZeladorName(task.assignedTo)}
+                    </span>
+                  )}
+                  <span
+                    className={`status-badge status-${task.status.toLowerCase()}`}
+                  >
+                    {getStatusLabel(task.status)}
+                  </span>
                 </div>
               </div>
               <div className="task-actions">
+                {task.assignedTo ? (
+                  <div className="assigned-info">
+                    <span className="assigned-text">
+                      Atribuída para: {getAssignedZeladorName(task.assignedTo)}
+                    </span>
+                    <button
+                      className="btn-reassign"
+                      onClick={() => handleAssignTask(task)}
+                    >
+                      <FaUser />
+                      Reatribuir
+                    </button>
+                  </div>
+                ) : (
+                  <button
+                    className="btn-assign"
+                    onClick={() => handleAssignTask(task)}
+                  >
+                    <FaUser />
+                    Atribuir
+                  </button>
+                )}
                 <button
-                  className="btn-assign"
-                  onClick={() => handleAssignTask(task)}
+                  className="btn-delete"
+                  onClick={() => deleteTask(task.id)}
+                  style={{ fontWeight: "bold" }}
                 >
-                  <FaUser />
-                  Atribuir
+                  Excluir
                 </button>
               </div>
             </div>

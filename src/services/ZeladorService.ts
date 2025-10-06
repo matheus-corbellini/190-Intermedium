@@ -32,7 +32,7 @@ export const zeladorService = {
       for (const doc of querySnapshot.docs) {
         const data = doc.data();
 
-        const tasks = await taskService.getByZelador(doc.id);
+        const tasks = await taskService.getByZelador(data.email);
 
         const totalTasks = tasks.length;
         const pendingTasks = tasks.filter(
@@ -281,7 +281,7 @@ export const zeladorService = {
       // 2. Para cada zelador, calcular estatísticas
       for (const doc of querySnapshot.docs) {
         const data = doc.data();
-        const tasks = await taskService.getByZelador(doc.id);
+        const tasks = await taskService.getByZelador(data.email);
 
         const totalTasks = tasks.length;
         const pendingTasks = tasks.filter(
