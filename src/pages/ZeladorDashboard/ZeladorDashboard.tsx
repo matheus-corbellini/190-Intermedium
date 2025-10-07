@@ -18,6 +18,7 @@ import {
   FaClock,
   FaExclamationTriangle,
 } from "react-icons/fa";
+import OwnTasks from "./OwnTasks/OwnTasks";
 import "./ZeladorDashboard.css";
 
 const ZeladorDashboard: React.FC = () => {
@@ -291,53 +292,12 @@ const ZeladorDashboard: React.FC = () => {
     );
   };
 
-  const renderTasksContent = () => {
-    const pendingTasks = tasks.filter(
-      (t) => t.status === TaskStatus.PENDING || t.status === TaskStatus.OVERDUE
-    );
-
-    return (
-      <>
-        <div className="dashboard-header">
-          <h1>Minhas Tarefas</h1>
-          <p>Tarefas pendentes e em atraso</p>
-        </div>
-
-        <div className="tasks-section">
-          <div className="tasks-header">
-            <h2>Tarefas Pendentes ({pendingTasks.length})</h2>
-            <div className="current-time">
-              Atualizado: {currentTime.toLocaleTimeString("pt-BR")}
-            </div>
-          </div>
-          <div className="tasks-list">
-            {pendingTasks.length === 0 ? (
-              <div
-                style={{ padding: "40px", textAlign: "center", color: "#666" }}
-              >
-                Parabéns! Todas as tarefas foram concluídas.
-              </div>
-            ) : (
-              pendingTasks.map((task) => (
-                <TaskCard
-                  key={task.id}
-                  task={task}
-                  onStart={() => handleTaskStart(task)}
-                />
-              ))
-            )}
-          </div>
-        </div>
-      </>
-    );
-  };
-
   const renderSectionContent = () => {
     switch (activeSection) {
       case "dashboard":
         return renderDashboardContent();
       case "tasks":
-        return renderTasksContent();
+        return <OwnTasks />;
       case "reports":
         return (
           <div className="section-content">
