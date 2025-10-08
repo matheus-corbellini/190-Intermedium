@@ -1,11 +1,11 @@
 "use client";
 
 import React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "../../hooks/UseAuth";
 import "./Sidebar.css";
 import { useNavigation } from "../../hooks/useNavigation";
-import { mockTasks } from "../../data/mockTasks";
+import { taskService } from "../../services/TaskService";
 import { TaskStatus } from "../../types/Task";
 import {
   FaBars,
@@ -30,21 +30,37 @@ const Sidebar: React.FC<SidebarProps> = ({
   onSectionChange,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [pendingTasks, setPendingTasks] = useState(0);
+  const [overdueTasks, setOverdueTasks] = useState(0);
+  const [completedTasks, setCompletedTasks] = useState(0);
   const { user, logout } = useAuth();
   const { goTo } = useNavigation();
 
-  if (!user) return null;
+  // Carregar tarefas reais do usuário
+  useEffect(() => {
+    if (!user) return;
 
-  const userTasks = mockTasks.filter((task) => task.assignedTo === user.email);
-  const pendingTasks = userTasks.filter(
-    (t) => t.status === TaskStatus.PENDING
-  ).length;
-  const overdueTasks = userTasks.filter(
-    (t) => t.status === TaskStatus.OVERDUE
-  ).length;
-  const completedTasks = userTasks.filter(
-    (t) => t.status === TaskStatus.COMPLETED
-  ).length;
+    const loadTaskStats = async () => {
+      try {
+        const userTasks = await taskService.getByZelador(user.email);
+        setPendingTasks(
+          userTasks.filter((t) => t.status === TaskStatus.PENDING).length
+        );
+        setOverdueTasks(
+          userTasks.filter((t) => t.status === TaskStatus.OVERDUE).length
+        );
+        setCompletedTasks(
+          userTasks.filter((t) => t.status === TaskStatus.COMPLETED).length
+        );
+      } catch (error) {
+        console.error("Erro ao carregar estatísticas:", error);
+      }
+    };
+
+    loadTaskStats();
+  }, [user]);
+
+  if (!user) return null;
 
   const handleLogout = () => {
     logout();

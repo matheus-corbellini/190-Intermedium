@@ -10,6 +10,7 @@ import {
   where,
   orderBy,
   Timestamp,
+  type DocumentData,
 } from "firebase/firestore";
 import { db } from "../lib/firebaseconfig";
 import type {
@@ -113,6 +114,7 @@ export const taskService = {
         ...data,
         checklist: checklistWithIds,
         status: TaskStatus.PENDING,
+        priority: data.priority || "medium",
         createdAt: now,
       };
     } catch (error) {
@@ -292,7 +294,7 @@ export const taskService = {
   },
 
   // Função auxiliar para converter dados do Firestore para Task
-  convertFirestoreToTask(id: string, data: any): Task {
+  convertFirestoreToTask(id: string, data: DocumentData): Task {
     return {
       id,
       title: data.title,

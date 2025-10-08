@@ -10,6 +10,7 @@ import {
   where,
   orderBy,
   Timestamp,
+  type DocumentData,
 } from "firebase/firestore";
 import { db } from "../lib/firebaseconfig";
 import type {
@@ -317,7 +318,7 @@ export const taskTemplateService = {
   },
 
   // Função auxiliar para converter dados do Firestore para TaskTemplate
-  convertFirestoreToTaskTemplate(id: string, data: TaskTemplate): TaskTemplate {
+  convertFirestoreToTaskTemplate(id: string, data: DocumentData): TaskTemplate {
     return {
       id,
       title: data.title,

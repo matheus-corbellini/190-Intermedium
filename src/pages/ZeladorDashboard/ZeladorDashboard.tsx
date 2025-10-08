@@ -19,6 +19,7 @@ import {
   FaExclamationTriangle,
 } from "react-icons/fa";
 import OwnTasks from "./OwnTasks/OwnTasks";
+import TaskHistory from "./TaskHistory/TaskHistory";
 import "./ZeladorDashboard.css";
 
 const ZeladorDashboard: React.FC = () => {
@@ -307,13 +308,7 @@ const ZeladorDashboard: React.FC = () => {
           </div>
         );
       case "history":
-        return (
-          <div className="section-content">
-            <h2>Histórico</h2>
-            <p>Consulte o histórico de tarefas realizadas</p>
-            <span className="coming-soon">Em breve</span>
-          </div>
-        );
+        return <TaskHistory />;
       case "profile":
         return (
           <div className="section-content">
